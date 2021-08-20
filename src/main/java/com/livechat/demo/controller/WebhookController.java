@@ -64,4 +64,25 @@ public class WebhookController {
         return ResponseEntity.ok("EVENT_RECEIVED");
     }
 
+    @GetMapping
+    public ResponseEntity<?> verifyWebhook(@RequestParam("hub.mode") String hubMode, @RequestParam("hub.challenge") String hubChallenge, @RequestParam("hub.verify_token") String verifyToken) {
+        String verifyTokenServer = "a8493a30-00f1-11ec-9a03-0242ac130003";
+
+        // Checks if a token and mode is in the query string of the request
+        if (hubMode != null && verifyToken != null) {
+
+            // Checks the mode and token sent is correct
+            if (hubMode.equalsIgnoreCase("subscribe") && verifyToken.equalsIgnoreCase(verifyTokenServer)) {
+
+                // Responds with the challenge token from the request
+                LOGGER.info("WEBHOOK_VERIFIED");
+                return ResponseEntity.ok(hubChallenge);
+            } else {
+                // Responds with '403 Forbidden' if verify tokens do not match
+                return ResponseEntity.status(403).build();
+            }
+        }
+        return ResponseEntity.status(403).build();
+    }
+
 }
