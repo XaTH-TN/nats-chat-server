@@ -30,6 +30,15 @@ public class PublishMessageUtil {
     @Async
     public void processEvent(HashMap<String, Object> req) {
         MessageDto dto = new MessageDto();
+
+        ObjectMapper objectMap = new ObjectMapper();
+        String objMap = null;
+        try {
+            objMap = objectMap.writeValueAsString(req);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        LOGGER.info("Request log: " + objMap);
         String objectValue = (String) req.get("object");
         List<Object> entry = (List<Object>) req.get("entry");
         if (objectValue.equalsIgnoreCase("page")) {
@@ -48,7 +57,7 @@ public class PublishMessageUtil {
                 dto.setTimestamp(new Timestamp((Long) webhookEvent.get("timestamp")));
 
                 Map message = (Map) webhookEvent.get("message");
-                dto.setMid((String) message.get("mid"));
+                dto.setMid(message.get("mid") != null ? (String) message.get("mid") : null);
                 dto.setText((String) message.get("text"));
             }
         }
