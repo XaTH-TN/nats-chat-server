@@ -67,7 +67,7 @@ public class WebhookController {
 
     @GetMapping
     public ResponseEntity<?> verifyWebhook(@RequestParam("hub.mode") String hubMode, @RequestParam("hub.challenge") String hubChallenge, @RequestParam("hub.verify_token") String verifyToken) {
-        String verifyTokenServer = appProperties.getVerifyToken();
+        String verifyTokenServer = "a8493a30-00f1-11ec-9a03-0242ac130003";
 
         // Checks if a token and mode is in the query string of the request
         if (hubMode != null && verifyToken != null) {
